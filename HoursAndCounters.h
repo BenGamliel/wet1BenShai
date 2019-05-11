@@ -5,22 +5,26 @@
 #ifndef DSWET1SHAY_HOURSANDCOUNTERS_H
 #define DSWET1SHAY_HOURSANDCOUNTERS_H
 
-//hello
+#include "stdio.h"
 
 class HoursAndCounters {
     int _hours;
+    int _rooms;
     unsigned int* _hoursCounters;
     unsigned int _totalSum;
+    int numberOfRooms;
+    
 public:
     //HoursAndCounter Counstractor input: a given value to init the array
     // O(n) as n is hours value
-    explicit HoursAndCounters(int hours) :_hours(hours),_totalSum(0){
+    explicit HoursAndCounters(int hours,int rooms) :_hours(hours),_rooms(rooms),_totalSum(0){
         try {
             _hoursCounters = new unsigned int[hours];
 //        _hoursCounters={0};//init new array with the 0 value in all the array
             for (int i = 0; i < hours; i++) {
                 _hoursCounters[i] = 0;
             }
+            numberOfRooms=_hours*_rooms;
         }
         catch(std::bad_alloc&) {
             if(_hoursCounters){
@@ -46,6 +50,9 @@ public:
     }
     unsigned int getTotalSum(){
         return _totalSum;
+    }
+    void getEfiiciency(float* efficiency){
+        *efficiency=(_totalSum/numberOfRooms);
     }
 };
 

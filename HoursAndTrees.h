@@ -6,9 +6,6 @@
 #define DSWET1SHAY_HOURSANDTREES_H
 #include "AVL.h"
 
-class
-
-
 
 class HoursAndTrees {
 private:
@@ -18,7 +15,7 @@ private:
 public:
     //constractor build new array -every node of the array holds a full avl tree
     //with the number of possible class to fill with a course (means the avl tree holds all avilable class and every
-    //of the array represent an hour00000000000000000000000000000000000000000000000000000000000000000000000000000000000000007
+    //of the array represent an hour
     //each hour(int) in the tree means this hour is avilable to be used
     HoursAndTrees(unsigned int numOfHours, unsigned int numOfClass):_numOfHours(numOfHours),_numOfClass(numOfClass){
         try {
@@ -67,6 +64,13 @@ public:
         bool res = _hourTreesClasses[hour]->insert(theClass,_hourTreesClasses+hour);
         if (!res) {
             printf("freeAClass failed -means the AVL tree didnt insert the node \n");
+        }
+    }
+    //getAllFreeRoomsByHour will return a malloc array contains all the room avilable in given hour
+    //
+    void getAllFreeRoomsByHour(int hour,int **rooms,int* numOfRooms){
+        if((!numOfRooms)||(!rooms)||(hour<0)){
+            return;
         }
     }
 };
