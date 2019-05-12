@@ -27,6 +27,10 @@ public:
         this->id=id_;
     }
 
+    int getNum() const {
+        return this->numOfLectures;
+    }
+
     void addLectureToCourse(Lecture *lec);
 
     void removeLectureFromCourse(const Lecture_Key &k1);

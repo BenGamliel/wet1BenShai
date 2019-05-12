@@ -9,7 +9,7 @@ class Lecture_Key{
     int hour;
     int room;
 public:
-    Lecture_Key() : hour(0),room(0){};
+    Lecture_Key() : hour(0),room(0);
 
     Lecture_Key(int hour_,int room_) : hour(hour_),room(room_){};
 
@@ -39,7 +39,7 @@ bool operator==(const Lecture_Key &k1, const Lecture_Key &k2){
     return k1.room==k2.room && k1.hour==k2.hour;
 }
 
-std::ostream &operator<<(std::ostream &os, const Lecture_Key &lec) {
+friend std::ostream &operator<<(std::ostream &os, const Lecture_Key &lec) {
     return os << "[Hour: "  << lec.getHour() << ", Room: " << lec.getRoom()<< "]";
 }
 
