@@ -1,0 +1,137 @@
+//
+// Created by DELL on 5/11/2018.
+//
+
+#ifndef WET1_CLAN_H
+#define WET1_CLAN_H
+
+#include "Player.h"
+
+class Clan {
+   // int size;
+    int _id;
+    AVL<Player_score>* _players;
+    Player_score* _best;
+    bool delete_flag;
+    bool best_removed;
+public:
+    //casting
+    Clan(int clan_id, bool temp_flag=false) :_id(clan_id), _players(nullptr),  _best(nullptr), delete_flag(!temp_flag),best_removed(false) {
+        _players = new AVL<Player_score>;
+    }
+    Clan(const Clan& other):_id(other._id),_players(other._players),  _best( other._best), delete_flag(true),best_removed(other.best_removed) {}
+
+    ~Clan() {
+        if (delete_flag) {
+            delete _players;
+        }
+    }
+    int getId()const{
+        return _id;
+    }
+    bool operator<(const Clan& other) const {
+        return (bool)(_id < other._id);
+    }
+
+    bool operator>(const Clan& other) const {
+        return (bool)(_id > other._id);
+    }
+    bool operator==(const Clan& other) const {
+        return (bool)(_id == other._id);
+    }
+    Player_score* getBest() {
+        return _best;
+    }
+
+    int getSize()const{
+        return this->_players->getSize();
+    }
+    class UniteOperation {
+        Clan* clan;
+    public:
+        UniteOperation(Clan* clan_ptr): clan(clan_ptr){}
+        bool operator()(Player_score* player) {
+            if (player->player->getChallanges() == 0) {
+                player->player->changeClan(nullptr);
+                return false;
+            } else {
+                player->player->changeClan(clan);
+                return true;
+            }
+        }
+    };
+    Clan* unite(Clan* clan){
+        int  id=0;
+        if(this->getSize()==clan->getSize()){
+            id=_id < clan->_id ? _id: clan->_id;
+        }
+        else{
+            id=this->getSize() > clan->getSize()?_id:clan->_id;
+        }
+
+        Clan* temp = new Clan(id,true);
+        delete temp->_players;
+        temp->_players = _players->unite(*(clan->_players),UniteOperation(temp));
+
+        if(_best && clan->_best) {
+            if (_best->getChallanges() < clan->_best->getChallanges()) {
+                temp->_best = clan->_best;
+            }
+            else if (_best->getChallanges() > clan->_best->getChallanges())
+            {
+                temp->_best = _best;
+            }
+            else {
+                temp->_best = this->_best->getId() < clan->_best->getId() ? _best : clan->_best;
+            }
+        }
+        else if(_best){
+            temp->_best=_best;
+        }
+        else{
+            temp->_best=clan->_best;
+        }
+        temp->_best=temp->_players->get(*temp->_best);
+        return temp;
+    }
+    bool insert(const Player_score& player){
+        if (_players->insert(player, &_players) == false) {
+            return false;
+        }
+        Player_score* real_player = _players->get(player);
+        if (real_player == nullptr) { //TODO remove this condition
+            return  false;
+        }
+        if((_best==nullptr)||(this->getSize()==1)||(best_removed)) {
+            _best = real_player;
+            best_removed=false;
+        }
+        else if (_best->getChallanges() <= player.getChallanges())
+        {
+            if (_best->getChallanges() < player.getChallanges())
+            {
+                _best = real_player;
+            }
+            else
+                {
+                if (_best->getId() >real_player->getId())
+                {
+                    _best = real_player;
+                }
+            }
+        }
+        return true;
+    }
+    bool remove(const Player_score& player){
+        if(_best && player.getId()==_best->player->getId() ) {
+            best_removed=true;
+        }
+      return _players->remove(player,&_players);
+    }
+    void getSorted(Player_score** Players){
+        _players->getSorted(Players);
+    }
+};
+
+
+#endif //WET1_CLAN_H
