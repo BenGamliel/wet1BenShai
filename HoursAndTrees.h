@@ -7,10 +7,13 @@
 #include "AVL.h"
 
 
+
+bool HoursAndTreesTest();
+
 class HoursAndTrees {
 private:
-    unsigned int _numOfHours;
-    unsigned int _numOfClass;
+    int _numOfHours;
+    int _numOfClass;
     AVL<int>** _hourTreesClasses;
 public:
     //constractor build new array -every node of the array holds a full avl tree
@@ -19,7 +22,7 @@ public:
     //each hour(int) in the tree means this hour is avilable to be used
     HoursAndTrees(unsigned int numOfHours, unsigned int numOfClass):_numOfHours(numOfHours),_numOfClass(numOfClass){
         try {
-            _hourTreesClasses = new AVL *[numOfClass];
+            _hourTreesClasses = new AVL<int>*[numOfClass];
         }
         catch(std::bad_alloc&) {
             printf("bad alloc in HoursAndTrees constractor for col(hours) allocation\n");
@@ -33,11 +36,11 @@ public:
         }
         catch(std::bad_alloc&) {
             printf("bad alloc in HoursAndTrees constractor for rows(class) allocation\n");
-    
+
             for(int i=0;i<init_counter;i++){
-            delete []_hourTreesClasses[i];
-         }
-          delete [] _hourTreesClasses;
+                delete []_hourTreesClasses[i];
+            }
+            delete [] _hourTreesClasses;
         }
         for(int i=0;i<numOfHours;i++){
             for(int j=0;j<numOfClass;j++){
@@ -45,14 +48,14 @@ public:
             }
         }
     }
-    
+
     ~HoursAndTrees(){
         for(int i=0;i<_numOfClass;i++){ //double check if this needs to be num of classes or num of hours (anyway test if all is free)
             delete []_hourTreesClasses[i];
         }
         delete [] _hourTreesClasses;
     }
-    
+
 
     void scheduleAClass(int hour, int theClass){
         bool res= _hourTreesClasses[hour]->remove(theClass,_hourTreesClasses+hour);
@@ -72,8 +75,27 @@ public:
         if((!numOfRooms)||(!rooms)||(hour<0)){
             return;
         }
+//        countLeafs counter(numOfRooms);
+//        _hourTreesClasses[hour]->inorder(counter);
+        *numOfRooms=_hourTreesClasses[hour]->getSize();
+//        rooms=malloc(sizeof(int)*(*numOfRooms));
+//            rooms=(int*)malloc((*numOfRooms)*sizeof(int));
+    }
+
+};
+
+class countLeafs{
+    int* counter;
+public:
+    countLeafs(int* numOfRooms){
+        counter=numOfRooms;
+        *counter=0;
+    }
+    int operator()(){
+        *counter++;
     }
 };
+
 
 
 #endif//DSWET1SHAY_HOURSANDTREES_H
