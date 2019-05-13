@@ -9,15 +9,11 @@ class Lecture_Key{
     int hour;
     int room;
 public:
-    Lecture_Key() : hour(0),room(0);
+    Lecture_Key() : hour(0),room(0){};
 
     Lecture_Key(int hour_,int room_) : hour(hour_),room(room_){};
 
     friend bool operator==(const Lecture_Key &k1, const Lecture_Key &k2);
-
-
-
-    friend std::ostream &operator<<(std::ostream &os, const Lecture_Key lec);
 
     Lecture_Key &operator=(const Lecture_Key &k1){
         this->hour=k1.hour;
@@ -39,9 +35,6 @@ bool operator==(const Lecture_Key &k1, const Lecture_Key &k2){
     return k1.room==k2.room && k1.hour==k2.hour;
 }
 
-friend std::ostream &operator<<(std::ostream &os, const Lecture_Key &lec) {
-    return os << "[Hour: "  << lec.getHour() << ", Room: " << lec.getRoom()<< "]";
-}
 
 class Lecture{
     int room;
@@ -82,7 +75,7 @@ class compareLectures{
 public:
     compareLectures(){};
 
-    bool operator()(const Lecture_Key &k1, const Lecture &k2) { // p1 is first
+    bool operator()(const Lecture_Key &k1,const Lecture_Key &k2) { // p1 is first
         if (k1.getHour() > k2.getHour())
             return false;
         else if (k2.getHour() == k1.getHour())
@@ -90,6 +83,8 @@ public:
         else
             return true;
     }
+
+    ~compareLectures(){};
 };
 
 #endif //PP_LECTURE_H

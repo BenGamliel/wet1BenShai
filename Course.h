@@ -19,6 +19,7 @@ public:
         this->lecturesTree = t;
     }
 
+
     int getId() const{
         return this->id;
     }

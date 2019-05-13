@@ -11,34 +11,30 @@
 AVLTree<Lecture *, Lecture_Key , compareLectures> *
 unionTrees(AVLTree<Lecture *, Lecture_Key , compareLectures> *t1,
            AVLTree<Lecture *, Lecture_Key , compareLectures> *t2,
-           int size1, int size2, int * maxId, int * maxAmount, int * size) {
-    Lecture **t1Player = new Lecture*[size1];
-    Lecture **t2Player = new Lecture*[size2];
-    t1->inOrderToArray(t1Player);
-    t2->inOrderToArray(t2Player);
+           int size1, int size2) {
+    Lecture **t1Lecture = new Lecture*[size1];
+    Lecture **t2Lecture = new Lecture*[size2];
+    t1->inOrderToArray(t1Lecture);
+    t2->inOrderToArray(t2Lecture);
     Lecture **mergedArr= new Lecture*[size1 + size2];
     Lecture_Key *mergedKeys =new Lecture_Key[size1 + size2];
     int i = 0, j = 0, k = 0;
-    int noChallenges = 0;
     Lecture_Key key1;
     Lecture_Key key2;
     while (i < size1 && j < size2) {
-        key1 =  Lecture_Key(t1Player[i]->getHour(),
-                           t1Player[i]->getRoom());
-        key2 =  Lecture_Key(t2Player[j]->getHour(),
-                           t2Player[j]->getRoom());
+        key1 =  Lecture_Key(t1Lecture[i]->getHour(),
+                           t1Lecture[i]->getRoom());
+        key2 =  Lecture_Key(t2Lecture[j]->getHour(),
+                           t2Lecture[j]->getRoom());
         compareLectures cmp;
-        if (cmp(key1, key2)) {
-            mergedArr[k] = t1Player[i];
+        if (cmp.operator()(key1,key2)) {
+            mergedArr[k] = t1Lecture[i];
             mergedKeys[k] = key1;
-            if (t1Player[i]->getChallenges() == 0)
-                noChallenges++;
             i++;
+
         } else {
-            mergedArr[k] = t2Player[j];
+            mergedArr[k] = t2Lecture[j];
             mergedKeys[k] = key2;
-            if (t2Player[j]->getChallenges() == 0)
-                noChallenges++;
             j++;
         }
         k++;
@@ -46,54 +42,29 @@ unionTrees(AVLTree<Lecture *, Lecture_Key , compareLectures> *t1,
 
     // If there are more elements in first array
     while (i < size1) {
-        mergedArr[k] = t1Player[i];
-        key1 =  Lecture_Key(t1Player[i]->getCoins(),
-                           t1Player[i]->getId());
+        mergedArr[k] = t1Lecture[i];
+        key1 =  Lecture_Key(t1Lecture[i]->getHour(),
+                           t1Lecture[i]->getRoom());
         mergedKeys[k] = key1;
-        if (t1Player[i]->getChallenges() == 0)
-            noChallenges++;
         i++;
         k++;
     }
 
     // If there are more elements in second array
     while (j < size2) {
-        mergedArr[k] = t2Player[j];
-        key2 =  Lecture_Key(t2Player[j]->getCoins(),
-                           t2Player[j]->getId());
+        mergedArr[k] = t2Lecture[j];
+        key2 =  Lecture_Key(t2Lecture[j]->getHour(),
+                           t2Lecture[j]->getRoom());
         mergedKeys[k] = key2;
-        if (t2Player[j]->getChallenges() == 0)
-            noChallenges++;
         j++;
         k++;
     }
-    int newSize = size1 + size2 - noChallenges;
-    Lecture **filteredArr = new Lecture*[newSize];
-    Lecture_Key *filteredKeys = new Lecture_Key[newSize];
-    int y = 0;
-    for (int x = 0; x < size1 + size2; x++) {
-        if (mergedArr[x]->getChallenges() != 0) {
-            if (mergedArr[x]->getChallenges() > *maxAmount){
-                *maxAmount =  mergedArr[x]->getChallenges();
-                *maxId = mergedArr[x]->getId();
-            }else if(mergedArr[x]->getChallenges() == *maxAmount){
-                if (mergedArr[x]->getId() < *maxId)
-                    *maxId = mergedArr[x]->getId();
-            }
-            filteredArr[y] = mergedArr[x];
-            filteredKeys[y] = mergedKeys[x];
-            y++;
-        }
-    }
     AVLTree<Lecture *, Lecture_Key , compareLectures> *newTree = new AVLTree<Lecture *, Lecture_Key , compareLectures>(
-            filteredArr, &filteredKeys, newSize);
-    *size = newSize;
-    delete[] filteredArr;
-    delete[] filteredKeys;
+            mergedArr, &mergedKeys, size1+size2);
     delete[] mergedArr;
     delete[] mergedKeys;
-    delete[] t1Player;
-    delete[] t2Player;
+    delete[] t1Lecture;
+    delete[] t2Lecture;
     return newTree;
 }
 

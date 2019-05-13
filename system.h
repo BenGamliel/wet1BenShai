@@ -9,6 +9,8 @@
 #include "scheduleMatrix.h"
 #include "HoursAndTrees.h"
 #include "HoursAndCounters.h"
+#include "auxFunction.h"
+#include <stdlib.h>
 
 class System{
     AVLTree<Course *,int> *Courses;
@@ -20,6 +22,17 @@ public:
     System(const int k,const int r){
         this->Courses = new AVLTree<Course *,int>();
         this->Matrix = new scheduleMatrix(k,r);
+    }
+
+    void deleteCourse(int courseId_) {
+        Course *c = Courses->findBYKey(courseId_)->getData();
+        Courses->deleteBYKey(courseId_);
+        delete c;
+    }
+
+    void addCourse(int courseId_, int numOfLec, AVLTree<Lecture *,Lecture_Key,compareLectures> *t){
+        Course *c = new Course(courseId_,numOfLec,t);
+        this->Courses->insert(c,courseId_);
     }
 
     StatusType addLecture(int hour,int room,int courseId);
@@ -97,8 +110,40 @@ StatusType System::changeCourseId(int old, int new_) {
     AVLNode<Course *,int> *node = Courses->findBYKey(old);
     if(node == NULL)
         return FAILURE;
+    AVLNode<Course *,int> *node1 = Courses->findBYKey(new_);
+    if(node1 == NULL){
+        node->getData()->setId(new_);
+        return SUCCESS;
+    }
+    AVLTree<Lecture *,Lecture_Key,compareLectures> *lectureTree = unionTrees(node->getData()->getLecturesTree(),
+                                                                             node1->getData()->getLecturesTree(),
+                                                                             node->getData()->getNum(),node1->getData()->getNum());
+    this->deleteCourse(old);
+    this->deleteCourse(new_);
+    this->addCourse(new_,lectureTree->getSize(),lectureTree);
+    return SUCCESS;
+}
 
 
+StatusType System::GetAllLecturesByCourse(int courseId, int **hours, int **rooms, int *numOfLectures) {
+    if(courseId <= 0 || hours == NULL || rooms == NULL || numOfLectures == NULL)
+        return INVALID_INPUT;
+    AVLNode<Course *,int> *node = Courses->findBYKey(courseId);
+    if(node==NULL)
+        return FAILURE;
+    *hours = (int *) malloc(node->getData()->getLecturesTree()->getSize() * sizeof(**hours));
+    *rooms = (int *) malloc(node->getData()->getLecturesTree()->getSize() * sizeof(**rooms));
+    if(!*hours || !*rooms)
+        return ALLOCATION_ERROR;
+    Lecture_Key *keys = new Lecture_Key[node->getData()->getLecturesTree()->getSize()];
+    node->getData()->getLecturesTree()->inOrderToArrayKeys(&keys);
+    for(int i=0;i < node->getData()->getNum()-1; i++){
+        (*hours)[i] = keys[i].getHour();
+        (*rooms)[i] = keys[i].getRoom();
+    }
+    *numOfLectures = node->getData()->getNum();
+    delete[] keys;
+    return SUCCESS;
 }
 
 
