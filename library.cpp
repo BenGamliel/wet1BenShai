@@ -1,23 +1,49 @@
 #include "library.h"
 
 #include <iostream>
-#include "Course.h"
+#include "system.h"
 
-void *Init(int hours, int rooms);
-
-StatusType AddLecture(void *DS, int hour, int roomID, int courseID){
+void *Init(int hours, int rooms){
+    System *DS = new System(hours,rooms);
+    return (void *) DS;
 }
 
-StatusType GetCourseID(void *DS, int hour, int roomID, int *courseID);
+StatusType AddLecture(void *DS, int hour, int roomID, int courseID){
+    if(DS == NULL)
+        return INVALID_INPUT;
+    return ((System *) DS)->addLecture(hour,roomID,courseID);
+}
 
-StatusType DeleteLecture(void *DS, int hour, int roomID);
+StatusType GetCourseID(void *DS, int hour, int roomID, int *courseID){
+    if(DS == NULL)
+        return INVALID_INPUT;
+    return ((System *)DS)->getCourseId(hour,roomID,courseID);
+}
 
-StatusType ChangeCourseID(void *DS, int oldCourseID, int newCourseID);
+StatusType DeleteLecture(void *DS, int hour, int roomID){
+    if(DS == NULL)
+        return INVALID_INPUT;
+    return ((System *)DS)->deleteLecture(hour,roomID);
+}
+
+StatusType ChangeCourseID(void *DS, int oldCourseID, int newCourseID){
+    if(DS == NULL)
+        return INVALID_INPUT;
+    return ((System *)DS)->changeCourseId(oldCourseID,newCourseID);
+}
 
 StatusType CalculateScheduleEfficiency(void *DS, float *efficiency);
 
 StatusType GetAllFreeRoomsByHour(void *DS, int hour, int **rooms, int* numOfRooms);
 
-StatusType GetAllLecturesByCourse(void *DS, int courseID, int **hours, int **rooms, int *numOfLectures);
+StatusType GetAllLecturesByCourse(void *DS, int courseID, int **hours, int **rooms, int *numOfLectures){
+    if(DS == NULL)
+        return INVALID_INPUT;
+    return ((System *)DS)->GetAllLecturesByCourse(courseID,hours,rooms,numOfLectures);
+}
 
-void Quit(void** DS);
+void Quit(void** DS){
+    if(DS != NULL && (*DS) != NULL)
+        delete ((System *)(*DS));
+    (*DS) = NULL;
+}

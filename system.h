@@ -49,6 +49,16 @@ public:
 
     StatusType GetAllLecturesByCourse(int courseId,int **hours,int **rooms,int *numOfLectures);
 
+    ~System(){
+        Course **SysCurse = new Course *[this->Courses->getSize()];
+        this->Courses->inOrderToArray(SysCurse);
+        for (int i = 0; i < this->Courses->getSize(); i++) {
+            delete SysCurse[i];
+        }
+        delete[] SysCurse;
+        delete this->Courses;
+    }
+
 };
 
 

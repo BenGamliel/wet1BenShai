@@ -6,6 +6,7 @@
 #define DSWET1SHAY_SCHEDULEMATRIX_H
 
 #include "Lecture.h"
+#include "Course.h"
 
 
 //int course_number;
@@ -46,7 +47,8 @@ public:
         if(!_data){
             return -1;
         }
-        return _data->getCourseNumber();
+        Course *c = _data->getCourse();
+        return c->getId();
     }
     int getLectureCourseHour(){
         if(!_data){
