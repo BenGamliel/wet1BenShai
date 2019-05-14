@@ -88,11 +88,10 @@ StatusType System::addLecture(int hour,int room,int courseId){
     if(courseId <= 0 || hour < 0 || room < 0)
         return INVALID_INPUT;
     Lecture* temp = Matrix->getLecture(hour,room); /* O(1) */
-    if(temp != nullptr){
+    if(temp != NULL){
         return FAILURE;
     }
     Lecture *lecture = new Lecture(room,hour);
-    Matrix->insertLectureToMatrix(lecture,hour,room);
     AVLNode<Course *,int> *node = Courses->findBYKey(courseId); /* O(log(n)) */
     if(node == NULL){
         Course *c = new Course(courseId);
@@ -103,6 +102,7 @@ StatusType System::addLecture(int hour,int room,int courseId){
     }
     lecture->setCourse(node->getData());
     node->getData()->addLectureToCourse(lecture);  /* O(log(m))  */
+    Matrix->insertLectureToMatrix(lecture,hour,room);
     HourTree->scheduleAClass(hour,room);
     HourCount->addLectureInHour(hour);
     return SUCCESS;

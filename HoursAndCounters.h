@@ -12,15 +12,15 @@ bool HoursAndCountersTest();
 class HoursAndCounters {
     int _hours;
     int _rooms;
-    unsigned int* _hoursCounters;
-    unsigned int _totalSum;
+     int* _hoursCounters;
+     int _totalSum;
     int numberOfRooms;
 
 public:
     //HoursAndCounter Counstractor input: a given value to init the array
     // O(n) as n is hours value
     explicit HoursAndCounters(int hours,int rooms) :_hours(hours),_rooms(rooms),_totalSum(0){
-        _hoursCounters = new unsigned int[hours];
+        _hoursCounters = new  int[hours];
         for (int i = 0; i < hours; i++) {
             _hoursCounters[i] = 0;
         }

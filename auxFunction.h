@@ -23,9 +23,9 @@ unionTrees(AVLTree<Lecture *, Lecture_Key , compareLectures> *t1,
     Lecture_Key key2;
     while (i < size1 && j < size2) {
         key1 =  Lecture_Key(t1Lecture[i]->getHour(),
-                           t1Lecture[i]->getRoom());
+                            t1Lecture[i]->getRoom());
         key2 =  Lecture_Key(t2Lecture[j]->getHour(),
-                           t2Lecture[j]->getRoom());
+                            t2Lecture[j]->getRoom());
         compareLectures cmp;
         if (cmp.operator()(key1,key2)) {
             mergedArr[k] = t1Lecture[i];
@@ -44,7 +44,7 @@ unionTrees(AVLTree<Lecture *, Lecture_Key , compareLectures> *t1,
     while (i < size1) {
         mergedArr[k] = t1Lecture[i];
         key1 =  Lecture_Key(t1Lecture[i]->getHour(),
-                           t1Lecture[i]->getRoom());
+                            t1Lecture[i]->getRoom());
         mergedKeys[k] = key1;
         i++;
         k++;
@@ -54,7 +54,7 @@ unionTrees(AVLTree<Lecture *, Lecture_Key , compareLectures> *t1,
     while (j < size2) {
         mergedArr[k] = t2Lecture[j];
         key2 =  Lecture_Key(t2Lecture[j]->getHour(),
-                           t2Lecture[j]->getRoom());
+                            t2Lecture[j]->getRoom());
         mergedKeys[k] = key2;
         j++;
         k++;

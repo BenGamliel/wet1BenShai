@@ -9,61 +9,7 @@
 #include "Course.h"
 
 
-//int course_number;
-//int room;
-//int hour;
-//Course *c;
-//
-//class Lecture {
-//    Lecture* _data;
-//public:
-////    friend class Lecture;
-//    /*
-//     * default constracot for Lecture used when init the scheduale matrix
-//     */
-//    explicit Lecture(){
-//        _data= nullptr;
-//    }
-//    /*
-//     * Lecture constractor with a given lecture
-//     * used to insert real lecture into the scheduleMatrix
-//     */
-//    explicit Lecture(Lecture* lecture){
-//        _data=lecture;//verify later when given lucture if points proparly
-//    }
-//    ~Lecture()= default;
-//
-//    void changeLecture(Lecture* newLecture){
-//        if(!newLecture){
-//            _data=nullptr;
-//            return;
-//        }
-//        _data=newLecture;
-//    }
-//    Lecture* getLecture(){
-//        return this->_data;
-//    }
-//    int getLectureCourseNumber(){//TODO shai needs to implament relavent func
-//        if(!_data){
-//            return -1;
-//        }
-//        Course *c = _data->getCourse();
-//        return c->getId();
-//    }
-//    int getLectureCourseHour(){
-//        if(!_data){
-//            return -1;
-//        }
-//        return _data->getHour();
-//     }
-//     int getLectureCourseRoom(){
-//         if(!_data){
-//             return -1;
-//         }
-//        return _data->getRoom();
-//     }
-//
-//};
+
 
 class scheduleMatrix {
     int hours_;
@@ -82,6 +28,9 @@ public:
         try{
             for (int i=0;i<rooms_;i++){
                 schedule_[i]=new Lecture*[rooms];
+                for (int j=0;j<rooms;j++){
+                    schedule_[i][j]= nullptr;
+                }
                 init_row_counter++;
             }
         }
@@ -127,6 +76,9 @@ public:
         if((hour<0)||(roomId<0)) {
             return nullptr;
         }
+        if((schedule_[hour][roomId]== nullptr)||(schedule_[hour][roomId]==NULL)){
+            return nullptr;
+        }
         return schedule_[hour][roomId];
     }
 //    void getCourseId(int hour,int roomId,int* courseId){
@@ -139,16 +91,4 @@ public:
 
 
 
-#endif //DSWET1SHAY_SCHEDULEMATRIX_H
-/* the allocation
- * int rows = ..., cols = ...;
-int** matrix = new int*[rows];
-for (int i = 0; i < rows; ++i)
-matrix[i] = new int[cols];
- 
- delete part
- for (int i = 0; i < rows; ++i)
-delete [] matrix[i];
-delete [] matrix;
- 
- */
+#endif

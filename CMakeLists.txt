@@ -1,9 +1,14 @@
-cmake_minimum_required(VERSION 3.6)
-project(pp2)
+cmake_minimum_required(VERSION 3.14)
+project(Wet1)
 
 set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_FLAGS "-std=c++0x -DNDBUG -Wall")
 
-set(SOURCE_FILES mainTrue.cpp auxFunction.h avlStruct.h
-        Course.h HoursAndCounters.h Lecture.h library.cpp
-        HoursAndTrees.cpp HoursAndTrees.h library.h scheduleMatrix.h scheduleMatrix.cpp system.h)
-add_executable(pp2 ${SOURCE_FILES})
+add_executable(Wet1 main.cpp
+        Course.h Lecture.h
+        system.h library.cpp library.h
+        HoursAndCounters.h
+        HoursAndTrees.h
+        scheduleMatrix.h
+        avlStruct.h
+        auxFunction.h)

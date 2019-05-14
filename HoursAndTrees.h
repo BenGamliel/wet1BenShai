@@ -6,6 +6,7 @@
 #define DSWET1SHAY_HOURSANDTREES_H
 
 #include "avlStruct.h"
+#include <iostream>
 
 class compareInt{
 public:
@@ -36,14 +37,15 @@ public:
             printf("bad alloc in HoursAndTrees constractor for col(hours) allocation\n");
         }
         int init_counter=0;
-        int* classValueArray = new int(sizeof(int)*_numOfHours);
+        int* classValueArray;
+        classValueArray=new int(_numOfHours);
         for (int i=0;i<numOfClass;i++){
             classValueArray[i]=i;
         }
 
         try {
             for (int j = 0; j < numOfClass; j++) {
-                _hourTreesClasses[j] = new AVLTree<int,int,compareInt>(classValueArray,&classValueArray,numOfClass);
+                _hourTreesClasses[j] = new AVLTree<int,int,compareInt>(classValueArray,numOfClass);
                 init_counter++;
             }
         }
@@ -55,8 +57,8 @@ public:
             }
             delete [] _hourTreesClasses;
         }
-        delete [] classValueArray;
-
+//        delete classValueArray;//TODO recheck here
+    printf("hello\n");
     }
 
     ~HoursAndTrees(){

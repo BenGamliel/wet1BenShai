@@ -1,4 +1,3 @@
-
 #ifndef WET1_AVL_H
 #define WET1_AVL_H
 
@@ -15,16 +14,16 @@ private:
     AVLNode<T, K> *left;
     AVLNode<T, K> *right;
     AVLNode<T, K> *parent;
-    int factor,height;
+    int factor, height;
 
     //Methods for the object node
 public:
     //Default constructor with no inputs
     AVLNode<T, K>()
-            : key_(), data_(), left(NULL), right(NULL), parent(NULL), factor(0) ,height(0) {}
+            : key_(), data_(), left(NULL), right(NULL), parent(NULL), factor(0), height(0) {}
 
-    AVLNode<T, K>(const T& data,const K& key,AVLNode<T,K>* parent)
-            : key_(key), data_(data), left(NULL), right(NULL), parent(parent), factor(0) ,height(0) {}
+    AVLNode<T, K>(const T &data, const K &key, AVLNode<T, K> *parent)
+            : key_(key), data_(data), left(NULL), right(NULL), parent(parent), factor(0), height(0) {}
 
     //Constructor with data and key inputs
     AVLNode<T, K>(const T &data, const K &key) : key_(key), data_(data),
@@ -42,11 +41,11 @@ public:
         return this->data_;
     }
 
-    int &getFactor(){
+    int &getFactor() {
         return this->factor;
     }
 
-    int &getHeight(){
+    int &getHeight() {
         return this->height;
     }
 
@@ -59,10 +58,11 @@ public:
         this->data_ = data;
     }
 
-    void setFactor(int factor){
+    void setFactor(int factor) {
         this->factor = factor;
     }
-    void setHeight(int height){
+
+    void setHeight(int height) {
         this->height = height;
     }
 
@@ -106,11 +106,13 @@ public:
 };
 
 
-template<class T, class K, class Compare = std::less<K> >
+template<class T, class K, class Compare = std::less <K> >
 class AVLTree {
 private:
     int size;
-    friend class AVLNode<T,K>;
+
+    friend class AVLNode<T, K>;
+
     AVLNode<T, K> *root;
 
 
@@ -122,13 +124,21 @@ private:
     //void deleteAVLNode(AVLNode<T, K> *node, K key);
 
     AVLNode<T, K> *sortedArrayToAVL(T *values, K **keys, int x, int y);
-
+    AVLNode<T, K> * sortedArrayToAvl(T *values, int x, int y);
 public:
     //Constructor
     AVLTree() : size(0), root(NULL) {};
+
     void deleteData();
-    AVLTree(T *values, K ** keys, int size) {
+
+    AVLTree(T *values, K **keys, int size) {
         this->root = sortedArrayToAVL(values, keys, 0, size - 1);
+        this->size=size;
+
+    }
+    AVLTree(T *keys,int size){
+        this->root = sortedArrayToAvl(keys,0,size-1);
+        this->size=size;
     }
 
     ~AVLTree() {
@@ -186,7 +196,7 @@ public:
 
     void inOrderToArrayKeys(AVLNode<T, K> *node, K **arr, int *iterator);
 
-    int getSize() const{
+    int getSize() const {
         return this->size;
     }
 
@@ -199,10 +209,13 @@ public:
         b->setData(data);
     }
 
-    void removeLeaf(AVLNode<T,K>* node);
-    void removeSingleN(AVLNode<T,K>* node);
-    void removeDoubleN(AVLNode<T,K>* node);
-    void update(AVLNode<T,K>* node);
+    void removeLeaf(AVLNode<T, K> *node);
+
+    void removeSingleN(AVLNode<T, K> *node);
+
+    void removeDoubleN(AVLNode<T, K> *node);
+
+    void update(AVLNode<T, K> *node);
 
     void updateroot();
 
@@ -235,24 +248,24 @@ public:
 
 //inser new node to the tree
 //Param: generic data, generic tree
-template <class T, class K, class Compare>
-void AVLTree<T, K, Compare>::insert(const T& data, const K& key) {
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::insert(const T &data, const K &key) {
     if (!root) {
-        root = new AVLNode<T,K>(data, key);
+        root = new AVLNode<T, K>(data, key);
         size++;
-        return ;
+        return;
     }
 
     bool fLeft = true;
-    AVLNode<T,K>* current = root;
-    AVLNode<T,K>* previous = current->getParent();
+    AVLNode<T, K> *current = root;
+    AVLNode<T, K> *previous = current->getParent();
     while (current) {
         previous = current;
         fLeft = Compare()(key, current->getKey()) != false;
         current = fLeft ? current->getLeft() : current->getRight();
     }
 
-    AVLNode<T,K>* new_node = new AVLNode<T,K>(data, key, previous);
+    AVLNode<T, K> *new_node = new AVLNode<T, K>(data, key, previous);
     if (fLeft) {
         previous->setLeftSon(new_node);
     } else {
@@ -266,7 +279,6 @@ void AVLTree<T, K, Compare>::insert(const T& data, const K& key) {
 
 
 }
-
 
 
 //Calculate the heigth fo given node
@@ -286,7 +298,6 @@ int AVLTree<T, K, Compare>::getHeight(AVLNode<T, K> *node) const {
     }
     return height;
 }
-
 
 
 //Recursive delete
@@ -311,12 +322,11 @@ int AVLTree<T, K, Compare>::balanceFactor(AVLNode<T, K> *root) const {
 }
 
 
-
 template<class T, class K, class Compare>
 void AVLTree<T, K, Compare>::rotateLeft(AVLNode<T, K> *root) {
     AVLNode<T, K> *newroot = root->getRight();
     root->setRightSon(newroot->getLeft());
-   // newroot->getLeft()->setParent(root);
+    // newroot->getLeft()->setParent(root);
     newroot->setLeftSon(root);
 
     if (root->getParent() == NULL) {
@@ -406,7 +416,7 @@ void AVLTree<T, K, Compare>::inOrderToArray(T *arr) {
 
 template<class T, class K, class Compare>
 void AVLTree<T, K, Compare>::inOrderToArray(AVLNode<T, K> *root, T *arr,
-                                          int *iterator) {
+                                            int *iterator) {
     if (root) {
         inOrderToArray(root->getLeft(), arr, iterator);
         (arr)[*iterator] = root->getData();
@@ -444,14 +454,25 @@ AVLNode<T, K> *AVLTree<T, K, Compare>::sortedArrayToAVL(T *values, K **keys,
     return root;
 }
 
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::deleteBYKey(const K &key)  {
-    AVLNode<T,K>* current = this->root;
+template<class T, class K, class Compare>
+AVLNode<T, K> *AVLTree<T, K, Compare>::sortedArrayToAvl(T *values, int x, int y) {
+    if (x > y)
+        return NULL;
+    int mid = (x + y) / 2;
+    AVLNode<T, K> *root = new AVLNode<T, K>(values[mid], ((values))[mid]);
+    root->setLeftSon(sortedArrayToAvl(values,  x, mid - 1));
+    root->setRightSon(sortedArrayToAvl(values,  mid + 1, y));
+    return root;
+}
+
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::deleteBYKey(const K &key) {
+    AVLNode<T, K> *current = this->root;
     while (Compare()(key, current->getKey()) || Compare()(current->getKey(), key)) {
         current = Compare()(key, current->getKey()) ? current->getLeft() : current->getRight();
     }
 
-    AVLNode<T,K>* parent = current->getParent();
+    AVLNode<T, K> *parent = current->getParent();
     if (!current->getLeft() && !current->getRight()) {
         removeLeaf(current);
     } else if (!current->getRight() || !current->getLeft()) {
@@ -468,12 +489,11 @@ void AVLTree<T,K,Compare>::deleteBYKey(const K &key)  {
 }
 
 
-
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::removeLeaf(AVLNode<T,K>* node) {
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::removeLeaf(AVLNode<T, K> *node) {
     if (!node->getParent()) {
         delete node;
-         this->root= NULL;
+        this->root = NULL;
         return;
     } else if (node == node->getParent()->getLeft()) {
         node->getParent()->setLeftSon(NULL);
@@ -484,8 +504,8 @@ void AVLTree<T,K,Compare>::removeLeaf(AVLNode<T,K>* node) {
 }
 
 
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::removeSingleN(AVLNode<T,K>* node) {
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::removeSingleN(AVLNode<T, K> *node) {
     if (node->getLeft()) { // has left
         if (!node->getParent()) {
             this->root = node->getLeft();
@@ -517,10 +537,9 @@ void AVLTree<T,K,Compare>::removeSingleN(AVLNode<T,K>* node) {
 }
 
 
-
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::removeDoubleN(AVLNode<T,K>* node) {
-    AVLNode<T,K>* node1 = node;
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::removeDoubleN(AVLNode<T, K> *node) {
+    AVLNode<T, K> *node1 = node;
     node = node1->getRight();
     while (node->getLeft()) {
         node = node->getLeft();
@@ -536,21 +555,20 @@ void AVLTree<T,K,Compare>::removeDoubleN(AVLNode<T,K>* node) {
 }
 
 
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::update(AVLNode<T,K>* node) {
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::update(AVLNode<T, K> *node) {
     while (node) {
         int left_h = node->getLeft() ? node->getLeft()->getHeight() : -1;
         int right_h = node->getRight() ? node->getRight()->getHeight() : -1;
         node->setFactor(left_h - right_h);
-        node->setHeight(std::max(left_h, right_h) + 1) ;
+        node->setHeight(std::max(left_h, right_h) + 1);
         node = node->getParent();
     }
 }
 
 
-
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::updateroot() {
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::updateroot() {
     if (!this->root) return;
     while (this->root->getParent()) {
         this->root = this->root->getParent();
@@ -559,34 +577,34 @@ void AVLTree<T,K,Compare>::updateroot() {
 
 
 //Roll left
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::roll_LL(AVLNode<T,K>* node1) {
-    AVLNode<T,K>* node = node1->getLeft();
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::roll_LL(AVLNode<T, K> *node1) {
+    AVLNode<T, K> *node = node1->getLeft();
     if (!node) return;
     int height_node1_r = node1->getRight() ? getHeight(node1->getRight()) : -1;
     int height_node_r = node->getRight() ? getHeight(node->getRight()) : -1;
     int height_a_left = node->getLeft() ? getHeight(node->getLeft()) : -1;
-    node->setParent(node1->getParent()) ;
+    node->setParent(node1->getParent());
     if (node1->getParent() && node1 == node1->getParent()->getLeft())
         node1->getParent()->setLeftSon(node);
     else if (node1->getParent()) {
         node1->getParent()->setRightSon(node);
     }
     node1->setParent(node);
-    node1->setLeftSon(node->getRight()) ;
+    node1->setLeftSon(node->getRight());
     if (node->getRight()) {
         node->getRight()->setParent(node1);
     }
     node->setRightSon(node1);
-    node1->setHeight(std::max(height_node1_r, height_node_r) + 1) ;
-    node1->setFactor(height_node_r - height_node1_r) ;
-    node->setHeight(std::max(node1->getHeight(), height_a_left) + 1) ;
-    node->setFactor(height_a_left - node1->getHeight()) ;
+    node1->setHeight(std::max(height_node1_r, height_node_r) + 1);
+    node1->setFactor(height_node_r - height_node1_r);
+    node->setHeight(std::max(node1->getHeight(), height_a_left) + 1);
+    node->setFactor(height_a_left - node1->getHeight());
 }
 
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::roll_RR(AVLNode<T,K>* node) {
-    AVLNode<T,K>* node1 = node->getRight();
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::roll_RR(AVLNode<T, K> *node) {
+    AVLNode<T, K> *node1 = node->getRight();
     if (!node1) {
         return;
     }
@@ -602,7 +620,7 @@ void AVLTree<T,K,Compare>::roll_RR(AVLNode<T,K>* node) {
 
     node->setParent(node1);
 
-    node->setRightSon(node1->getLeft()) ;
+    node->setRightSon(node1->getLeft());
 
     if (node1->getLeft()) {
         node1->getLeft()->setParent(node);
@@ -616,24 +634,24 @@ void AVLTree<T,K,Compare>::roll_RR(AVLNode<T,K>* node) {
     node1->setFactor(node->getHeight() - height_node1_r);
 }
 
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::roll_LR(AVLNode<T,K>* node1) {
-    AVLNode<T,K>* node = node1->getLeft();
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::roll_LR(AVLNode<T, K> *node1) {
+    AVLNode<T, K> *node = node1->getLeft();
     roll_RR(node);
     roll_LL(node1);
 }
 
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::roll_RL(AVLNode<T,K>* node1) {
-    AVLNode<T,K>* node = node1->getRight();
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::roll_RL(AVLNode<T, K> *node1) {
+    AVLNode<T, K> *node = node1->getRight();
     roll_LL(node);
     roll_RR(node1);
 }
 
 //Decide how to roll
-template <class T,class K,class Compare>
-void AVLTree<T,K,Compare>::roll(AVLNode<T,K>* node) {
-    AVLNode<T,K>* current = node;
+template<class T, class K, class Compare>
+void AVLTree<T, K, Compare>::roll(AVLNode<T, K> *node) {
+    AVLNode<T, K> *current = node;
     while (current) {
         int current_factor = current->getFactor();
         if (current_factor >= -1 && current_factor <= 1) {
@@ -802,7 +820,7 @@ void AVLTree<T, K, Compare>::deleteData(AVLNode<T, K> *root) {
     if (root) {
         deleteData(root->getLeft());
         deleteData(root->getRight());
-        if(root->getData() != NULL){
+        if (root->getData() != NULL) {
             delete root->getData(); // Post Order Deletion
             root->getData() = NULL;
         }
