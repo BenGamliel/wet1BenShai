@@ -1,0 +1,10 @@
+template<class T, class K, class Compare>
+AVLNode<T, K> *AVLTree<T, K, Compare>::sortedArrayToAvl(T *values, int x, int y) {
+    if (x > y)
+        return NULL;
+    int mid = (x + y) / 2;
+    AVLNode<T, K> *root = new AVLNode<T, K>(values[mid], ((values))[mid]);
+    root->setLeftSon(sortedArrayToAvl(values,  x, mid - 1));
+    root->setRightSon(sortedArrayToAvl(values,  mid + 1, y));
+    return root;
+}
