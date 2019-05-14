@@ -20,8 +20,8 @@ public:
 
 class HoursAndTrees {
 private:
-     int _numOfHours;
-     int _numOfClass;
+    int _numOfHours;
+    int _numOfClass;
     AVLTree<int,int,compareInt>** _hourTreesClasses;
 public:
     //constractor build new array -every node of the array holds a full avl tree
@@ -49,31 +49,31 @@ public:
         }
         catch(std::bad_alloc&) {
             printf("bad alloc in HoursAndTrees constractor for rows(class) allocation\n");
-    
+
             for(int i=0;i<init_counter;i++){
-            delete []_hourTreesClasses[i];
-         }
-          delete [] _hourTreesClasses;
+                delete []_hourTreesClasses[i];
+            }
+            delete [] _hourTreesClasses;
         }
         delete [] classValueArray;
 
     }
-    
+
     ~HoursAndTrees(){
         for(int i=0;i<_numOfClass;i++){ //double check if this needs to be num of classes or num of hours (anyway test if all is free)
             delete []_hourTreesClasses[i];
         }
         delete [] _hourTreesClasses;
     }
-    
+
 
     void scheduleAClass(int hour, int theClass){
         _hourTreesClasses[theClass]->deleteBYKey(hour);
-  
+
     }
     void freeAClass(int hour, int theClass) {
-       _hourTreesClasses[theClass]->insert(hour,hour);
-  
+        _hourTreesClasses[theClass]->insert(hour,hour);
+
     }
     //getAllFreeRoomsByHour will return a malloc array contains all the room avilable in given hour
     //numOfRooms gets the size of the tree

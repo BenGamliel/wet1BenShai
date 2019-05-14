@@ -14,6 +14,7 @@
 
 #define nullptr 0
 
+
 class System{
     AVLTree<Course *,int> *Courses;
     scheduleMatrix *Matrix;

@@ -19,7 +19,6 @@ public:
         this->lecturesTree = t;
     }
 
-
     int getId() const{
         return this->id;
     }
@@ -45,12 +44,12 @@ public:
 
 void Course::addLectureToCourse(Lecture *lec) {
     Lecture_Key key(lec->getHour(),lec->getRoom());
-    this->lecturesTree->insert(lec,key);
+//    this->lecturesTree->insert(lec,key);
     this->numOfLectures++;
 }
 
 void Course::removeLectureFromCourse(const Lecture_Key &k1) {
-    this->lecturesTree->deleteBYKey(k1);
+//    this->lecturesTree->deleteBYKey(k1);
     this->numOfLectures--;
 }
 

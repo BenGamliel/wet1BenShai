@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../library.h"
+#include "library.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -28,13 +28,13 @@ typedef enum {
     NONE_CMD = -2,
     COMMENT_CMD = -1,
     INIT_CMD = 0,
-	ADDLECTURE_CMD = 1,
-	GETCOURSEID_CMD = 2,
-	DELETELECTURE_CMD = 3,
-	CHANGECOURSEID_CMD = 4,
-	CALCULATESCHEDULEEFFICIENCY_CMD = 5,
-	GETALLFREEROOMSBYHOUR_CMD = 6,
-	GETALLLECTURESBYCOURSE_CMD = 7,
+    ADDLECTURE_CMD = 1,
+    GETCOURSEID_CMD = 2,
+    DELETELECTURE_CMD = 3,
+    CHANGECOURSEID_CMD = 4,
+    CALCULATESCHEDULEEFFICIENCY_CMD = 5,
+    GETALLFREEROOMSBYHOUR_CMD = 6,
+    GETALLLECTURESBYCOURSE_CMD = 7,
     QUIT_CMD = 8
 } commandType;
 
@@ -265,11 +265,11 @@ static errorType OnChangeCourseID(void* DS, const char* const command) {
 }
 
 static errorType OnCalculateScheduleEfficiency(void* DS, const char* const command) {
-	float efficiency;
+    float efficiency;
 #pragma GCC diagnostic ignored "-Wformat-zero-length"
     ValidateRead(sscanf(command, ""), 0, "%s failed.\n", commandStr[CALCULATESCHEDULEEFFICIENCY_CMD]);
 #pragma GCC diagnostic ignored "-Wformat-zero-length"
-	StatusType res = CalculateScheduleEfficiency(DS, &efficiency);
+    StatusType res = CalculateScheduleEfficiency(DS, &efficiency);
 
     if (res != SUCCESS) {
         printf("%s: %s\n", commandStr[CALCULATESCHEDULEEFFICIENCY_CMD], ReturnValToStr(res));
