@@ -32,9 +32,19 @@ StatusType ChangeCourseID(void *DS, int oldCourseID, int newCourseID){
     return ((System *)DS)->changeCourseId(oldCourseID,newCourseID);
 }
 
-StatusType CalculateScheduleEfficiency(void *DS, float *efficiency);
+StatusType CalculateScheduleEfficiency(void *DS, float *efficiency){
+    if(!DS){
+        return INVALID_INPUT;
+    }
+    return ((System*)DS)->CalculateScheduleEfficiency(efficiency);
+}
 
-StatusType GetAllFreeRoomsByHour(void *DS, int hour, int **rooms, int* numOfRooms);
+StatusType GetAllFreeRoomsByHour(void *DS, int hour, int **rooms, int* numOfRooms){
+    if(DS==NULL){
+        return INVALID_INPUT;
+    }
+    return ((System*)DS)->getAllRoomsByHour(hour,rooms,numOfRooms);
+}
 
 StatusType GetAllLecturesByCourse(void *DS, int courseID, int **hours, int **rooms, int *numOfLectures){
     if(DS == NULL)

@@ -12,6 +12,8 @@
 #include "auxFunction.h"
 #include <stdlib.h>
 
+#define nullptr 0
+
 class System{
     AVLTree<Course *,int> *Courses;
     scheduleMatrix *Matrix;
@@ -19,9 +21,16 @@ class System{
     HoursAndCounters *HourCount;
 
 public:
-    System(const int k,const int r){
+    System(const int hours,const int rooms){
         this->Courses = new AVLTree<Course *,int>();
-        this->Matrix = new scheduleMatrix(k,r);
+        this->Matrix = new scheduleMatrix(hours,rooms);
+        this->HourTree=new HoursAndTrees(hours,rooms);
+        this->HourCount=new HoursAndCounters(hours,rooms);
+    }
+
+    void addCourse(int courseId_, int numOfLec, AVLTree<Lecture *,Lecture_Key,compareLectures> *t){
+        Course *c = new Course(courseId_,numOfLec,t);
+        this->Courses->insert(c,courseId_);
     }
 
     void deleteCourse(int courseId_) {
@@ -30,22 +39,35 @@ public:
         delete c;
     }
 
-    void addCourse(int courseId_, int numOfLec, AVLTree<Lecture *,Lecture_Key,compareLectures> *t){
-        Course *c = new Course(courseId_,numOfLec,t);
-        this->Courses->insert(c,courseId_);
-    }
+
 
     StatusType addLecture(int hour,int room,int courseId);
 
+
     StatusType getCourseId(int hour,int room,int *courseId);
+
 
     StatusType deleteLecture(int hour,int room);
 
+
     StatusType changeCourseId(int old, int new_);
 
-    StatusType CalculateScheduleEfficiency(float *efficiency);
+    StatusType CalculateScheduleEfficiency(float *efficiency) {
+        if(!efficiency){
+            return FAILURE;
+        }
+        this->HourCount->getEfiiciency(efficiency);
+        return SUCCESS;
+    }
 
-    StatusType getAllRoomsByHour(int hour,int **rooms, int *numOfRooms);
+    StatusType getAllRoomsByHour(int hour,int **rooms, int *numOfRooms){
+        if((!rooms)||(!numOfRooms)||(hour<0)){
+            return FAILURE;
+        }
+        this->HourTree->getAllFreeRoomsByHour(hour,rooms,numOfRooms);
+        return SUCCESS;
+
+    }
 
     StatusType GetAllLecturesByCourse(int courseId,int **hours,int **rooms,int *numOfLectures);
 
@@ -61,25 +83,25 @@ public:
 
 };
 
-
 StatusType System::addLecture(int hour,int room,int courseId){
     if(courseId <= 0 || hour < 0 || room < 0)
         return INVALID_INPUT;
-    Lecture *le = Matrix->getLecture(hour,room); /* O(1) */
-    if(le != nullptr){
+    Lecture* temp = Matrix->getLecture(hour,room); /* O(1) */
+    if(temp != nullptr){
         return FAILURE;
     }
-    Lecture *l = new Lecture(room,hour);
+    Lecture *lecture = new Lecture(room,hour);
+    Matrix->insertLectureToMatrix(lecturePoitner(lecture),hour,room);
     AVLNode<Course *,int> *node = Courses->findBYKey(courseId); /* O(log(n)) */
     if(node == NULL){
         Course *c = new Course(courseId);
         Courses->insert(c,courseId); /* O(log(n)) */
-        l->setCourse(c);
-        c->addLectureToCourse(l);   /* O(log(m))  */
+        lecture->setCourse(c);
+        c->addLectureToCourse(lecture);   /* O(log(m))  */
         return SUCCESS;
     }
-    l->setCourse(node->getData());
-    node->getData()->addLectureToCourse(l);  /* O(log(m))  */
+    lecture->setCourse(node->getData());
+    node->getData()->addLectureToCourse(lecture);  /* O(log(m))  */
     HourTree->scheduleAClass(hour,room);
     HourCount->addLectureInHour(hour);
     return SUCCESS;
@@ -94,25 +116,29 @@ StatusType System::getCourseId(int hour, int room, int *courseId) {
     *courseId = l->getCourse()->getId();
     return SUCCESS;
 }
+//        this->Matrix->getLecture(hour,room)->getCourseNumber();//TODO the same as above
+
 
 StatusType System::deleteLecture(int hour, int room) {
     if(room < 0 || hour < 0){
         return INVALID_INPUT;
     }
-    Lecture *l = Matrix->getLecture(hour,room);
-    if(l == nullptr)
+    Lecture *lecture = Matrix->getLecture(hour,room);
+    if(lecture == nullptr)
         return FAILURE;
     Matrix->removeLectureFromMatrix(hour,room);
     HourCount->removeLuctureInHour(hour);
     HourTree->freeAClass(hour,room);
-    Course *c = l->getCourse();
-    Lecture_Key lk(l->getHour(),l->getRoom());
-    c->removeLectureFromCourse(lk);
-    if(c->getNum()==0){
-        Courses->deleteBYKey(c->getId());
+
+    Course *course = lecture->getCourse();
+    Lecture_Key lk(lecture->getHour(),lecture->getRoom());
+    course->removeLectureFromCourse(lk);
+    if(course->getNum()==0){
+        Courses->deleteBYKey(course->getId());
     }
     return SUCCESS;
 }
+
 
 StatusType System::changeCourseId(int old, int new_) {
     if(old <= 0 || new_ <= 0)

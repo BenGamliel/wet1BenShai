@@ -4,119 +4,95 @@
 
 #ifndef DSWET1SHAY_HOURSANDTREES_H
 #define DSWET1SHAY_HOURSANDTREES_H
-#include "AVL.h"
 
+#include "avlStruct.h"
 
+class compareInt{
+public:
+    compareInt(){};
 
-bool HoursAndTreesTest();
+    bool operator()(const int LH,const int RH) { // p1 is first
+        return LH==RH;
+    }
+
+    ~compareInt(){};
+};
 
 class HoursAndTrees {
 private:
-    int _numOfHours;
-    int _numOfClass;
-    AVL<int>** _hourTreesClasses;
+     int _numOfHours;
+     int _numOfClass;
+    AVLTree<int,int>** _hourTreesClasses;
 public:
     //constractor build new array -every node of the array holds a full avl tree
     //with the number of possible class to fill with a course (means the avl tree holds all avilable class and every
     //of the array represent an hour
     //each hour(int) in the tree means this hour is avilable to be used
-    HoursAndTrees(unsigned int numOfHours, unsigned int numOfClass):_numOfHours(numOfHours),_numOfClass(numOfClass){
+    HoursAndTrees( int numOfHours,  int numOfClass):_numOfHours(numOfHours),_numOfClass(numOfClass){
         try {
-            _hourTreesClasses = new AVL<int>*[numOfClass];
+            _hourTreesClasses = new AVLTree<int,int>*[numOfHours];
         }
         catch(std::bad_alloc&) {
             printf("bad alloc in HoursAndTrees constractor for col(hours) allocation\n");
         }
         int init_counter=0;
+        int* classValueArray = new int(sizeof(int)*_numOfHours);
+        for (int i=0;i<numOfClass;i++){
+            classValueArray[i]=i;
+        }
+
         try {
             for (int j = 0; j < numOfClass; j++) {
-                _hourTreesClasses[j] = new AVL<int>;
+                _hourTreesClasses[j] = new AVLTree<int,int,compareInt>(classValueArray,classValueArray,numOfClass);
                 init_counter++;
             }
         }
         catch(std::bad_alloc&) {
             printf("bad alloc in HoursAndTrees constractor for rows(class) allocation\n");
-
+    
             for(int i=0;i<init_counter;i++){
-                delete []_hourTreesClasses[i];
-            }
-            delete [] _hourTreesClasses;
+            delete []_hourTreesClasses[i];
+         }
+          delete [] _hourTreesClasses;
         }
-        for(int i=0;i<numOfHours;i++){
-            for(int j=0;j<numOfClass;j++){
-                _hourTreesClasses[i]->insert(j,&_hourTreesClasses[i]);
-            }
-        }
-    }
+        delete [] classValueArray;
 
+    }
+    
     ~HoursAndTrees(){
         for(int i=0;i<_numOfClass;i++){ //double check if this needs to be num of classes or num of hours (anyway test if all is free)
             delete []_hourTreesClasses[i];
         }
         delete [] _hourTreesClasses;
     }
-
+    
 
     void scheduleAClass(int hour, int theClass){
-        bool res= _hourTreesClasses[hour]->remove(theClass,_hourTreesClasses+hour);
-        if(!res) {
-            printf("scheduleAclass failed -means the AVL tree didnt remove the node \n");
-        }
+        _hourTreesClasses[theClass]->deleteBYKey(hour);
+  
     }
     void freeAClass(int hour, int theClass) {
-        bool res = _hourTreesClasses[hour]->insert(theClass,_hourTreesClasses+hour);
-        if (!res) {
-            printf("freeAClass failed -means the AVL tree didnt insert the node \n");
-        }
+       _hourTreesClasses[theClass]->insert(hour,hour);
+  
     }
     //getAllFreeRoomsByHour will return a malloc array contains all the room avilable in given hour
-    //
+    //numOfRooms gets the size of the tree
+    //*rooms gets a malloc array with the given size (numOfRooms)
+    //InOrderToArray load the tree with the given hour to the rooms array
     void getAllFreeRoomsByHour(int hour,int **rooms,int* numOfRooms){
         if((!numOfRooms)||(!rooms)||(hour<0)){
+            numOfRooms= nullptr;
+            rooms= nullptr;
             return;
         }
-//        countLeafs counter(numOfRooms);
-//        _hourTreesClasses[hour]->inorder(counter);
         *numOfRooms=_hourTreesClasses[hour]->getSize();
-//        rooms=malloc(sizeof(int)*(*numOfRooms));
-//            rooms=(int*)malloc((*numOfRooms)*sizeof(int));
+        *rooms = (int*)malloc(sizeof(int)*(*numOfRooms));
+        _hourTreesClasses[hour]->inOrderToArray(*rooms);
     }
 
 };
 
-class countLeafs{
-    int* counter;
-public:
-    countLeafs(int* numOfRooms){
-        counter=numOfRooms;
-        *counter=0;
-    }
-    int operator()(){
-        *counter++;
-    }
-};
 
 
 
-#endif//DSWET1SHAY_HOURSANDTREES_H
-//    bool scheduleAClass( int hour, int class){
-//             return _hourTreesClasses[hour]->remove(class,_hourTreesClasses[hour]);
-//         }
-//         catch(){
-//             printf("scheduleAclass failed -means the AVL tree didnt remove the node \n");
-//         }
-//    }
-//    bool freeAClass(unsigned int hour, int class){
-//        try {
-//            return _hourTreesClasses[hour]->insert(class,_hourTreesClasses[hour]);
-//        }
-//        catch(){
-//            printf("freeAClass failed -means the AVL tree didnt insert the node \n");
-//        }
-//    }
-//    void scheduleAClass(unsigned int hour, int class){
-//         _hourTreesClasses[hour]->remove(class,&_hourTreesClasses[hour]);
-//    }
-//    void freeAClass(unsigned int hour, int class){
-//         _hourTreesClasses[hour]->insert(class,&_hourTreesClasses[hour]);
-//    }
+#endif

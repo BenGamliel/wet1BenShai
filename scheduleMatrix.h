@@ -6,7 +6,6 @@
 #define DSWET1SHAY_SCHEDULEMATRIX_H
 
 #include "Lecture.h"
-#include "Course.h"
 
 
 //int course_number;
@@ -14,24 +13,24 @@
 //int hour;
 //Course *c;
 
-class lecturePoiner {
+class lecturePoitner {
     Lecture* _data;
 public:
 //    friend class Lecture;
     /*
      * default constracot for lecturePointer used when init the scheduale matrix
      */
-    explicit lecturePoiner(){
+    explicit lecturePoitner(){
         _data= nullptr;
     }
     /*
      * lecturePointer constractor with a given lecture
      * used to insert real lecture into the scheduleMatrix
      */
-    explicit lecturePoiner(Lecture* lecture){
+    explicit lecturePoitner(Lecture* lecture){
         _data=lecture;//verify later when given lucture if points proparly
     }
-    ~lecturePoiner()= default;
+    ~lecturePoitner()= default;
     
     void changeLecture(Lecture* newLecture){
         if(!newLecture){
@@ -43,12 +42,11 @@ public:
     Lecture* getLecture(){
         return this->_data;
     }
-    int getLectureCourseNumber(){
+    int getLectureCourseNumber(){//TODO shai needs to implament relavent func
         if(!_data){
             return -1;
         }
-        Course *c = _data->getCourse();
-        return c->getId();
+        return _data->getCourse()->getId();
     }
     int getLectureCourseHour(){
         if(!_data){
@@ -66,22 +64,22 @@ public:
 };
 
 class scheduleMatrix {
-unsigned int _hours;
-unsigned int _rooms;
-lecturePoiner** _schedule;
+ int _hours;
+ int _rooms;
+lecturePoitner** _schedule;
 public:
 
-    scheduleMatrix(unsigned int hours, unsigned int rooms):_hours(hours),_rooms(rooms),_schedule(nullptr){
+    scheduleMatrix( int hours,  int rooms):_hours(hours),_rooms(rooms),_schedule(nullptr){
         try {
-            _schedule = new lecturePoiner* [hours];
+            _schedule = new lecturePoitner* [hours];
         }
         catch(std::bad_alloc&){
             delete _schedule;//maybe not needed here (delete)
         }
         int init_row_counter=0;
         try{
-    for (int i=0;i<rooms;i++){
-        _schedule[i]=new lecturePoiner[rooms];
+    for (int i=0;i<_rooms;i++){
+        _schedule[i]=new lecturePoitner[rooms];
         init_row_counter++;
         }
     }
@@ -106,11 +104,11 @@ public:
     * param hour and roomID const lecature ref if param <0 or lecture adress is null (invalid input) return
     * else init a new lecaturePointer with the given param
     */
-   void insertLectureToMatrix(Lecture* lecature,int hour,int roomId){
-        if((!lecature)||(hour<0)||(roomId<0)){
+   void insertLectureToMatrix(lecturePoitner lecature,int hour,int roomId){
+        if((!lecature.getLecture())||(hour<0)||(roomId<0)){
             return;
         }
-        _schedule[hour][roomId].changeLecture(lecature);
+        _schedule[hour][roomId].changeLecture(lecature.getLecture());
     }
     void removeLectureFromMatrix(int hour,int roomId){
         if((hour<0)||(roomId<0)){
@@ -133,7 +131,7 @@ public:
         if((roomId<0)||(hour<0)||(!courseId)){
             return;
         }
-        *courseId=_schedule[hour][roomId].getLectureCourseNumber();
+        *courseId=_schedule[hour][roomId].getLecture()->getCourseNumber();
     }
 };
 
