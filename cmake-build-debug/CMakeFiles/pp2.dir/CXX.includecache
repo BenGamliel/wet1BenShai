@@ -1,0 +1,92 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+C:/Studies/Data Structures/hwlast/wet/library.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/Course.h
+avlStruct.h
+C:/Studies/Data Structures/hwlast/wet/pp2/avlStruct.h
+Lecture.h
+C:/Studies/Data Structures/hwlast/wet/pp2/Lecture.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/HoursAndCounters.h
+stdio.h
+C:/Studies/Data Structures/hwlast/wet/pp2/stdio.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/HoursAndTrees.cpp
+HoursAndTrees.h
+C:/Studies/Data Structures/hwlast/wet/pp2/HoursAndTrees.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/HoursAndTrees.h
+avlStruct.h
+C:/Studies/Data Structures/hwlast/wet/pp2/avlStruct.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/Lecture.h
+avlStruct.h
+C:/Studies/Data Structures/hwlast/wet/pp2/avlStruct.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/auxFunction.h
+avlStruct.h
+C:/Studies/Data Structures/hwlast/wet/pp2/avlStruct.h
+Lecture.h
+C:/Studies/Data Structures/hwlast/wet/pp2/Lecture.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/avlStruct.h
+iostream
+-
+
+C:/Studies/Data Structures/hwlast/wet/pp2/library.cpp
+library.h
+C:/Studies/Data Structures/hwlast/wet/pp2/library.h
+iostream
+-
+system.h
+C:/Studies/Data Structures/hwlast/wet/pp2/system.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/library.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/mainTrue.cpp
+assert.h
+-
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+../library.h
+C:/Studies/Data Structures/hwlast/wet/library.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/scheduleMatrix.cpp
+scheduleMatrix.h
+C:/Studies/Data Structures/hwlast/wet/pp2/scheduleMatrix.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/scheduleMatrix.h
+Lecture.h
+C:/Studies/Data Structures/hwlast/wet/pp2/Lecture.h
+Course.h
+C:/Studies/Data Structures/hwlast/wet/pp2/Course.h
+
+C:/Studies/Data Structures/hwlast/wet/pp2/system.h
+avlStruct.h
+C:/Studies/Data Structures/hwlast/wet/pp2/avlStruct.h
+Course.h
+C:/Studies/Data Structures/hwlast/wet/pp2/Course.h
+library.h
+C:/Studies/Data Structures/hwlast/wet/pp2/library.h
+scheduleMatrix.h
+C:/Studies/Data Structures/hwlast/wet/pp2/scheduleMatrix.h
+HoursAndTrees.h
+C:/Studies/Data Structures/hwlast/wet/pp2/HoursAndTrees.h
+HoursAndCounters.h
+C:/Studies/Data Structures/hwlast/wet/pp2/HoursAndCounters.h
+auxFunction.h
+C:/Studies/Data Structures/hwlast/wet/pp2/auxFunction.h
+stdlib.h
+-
+

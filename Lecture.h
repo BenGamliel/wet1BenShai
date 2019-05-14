@@ -31,7 +31,7 @@ public:
 
 };
 
-bool operator==(const Lecture_Key &k1, const Lecture_Key &k2){
+bool operator==(const Lecture_Key &k1, const Lecture_Key &k2) {
     return k1.room==k2.room && k1.hour==k2.hour;
 }
 

@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
-project(pp)
+project(pp2)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES library.cpp library.h Course.h Lecture.h system.h avlStruct.h HoursAndTrees.h
-        HoursAndTrees.cpp HoursAndCounters.h scheduleMatrix.h scheduleMatrix.cpp main.cpp auxFunction.h)
-add_library(pp ${SOURCE_FILES})
+set(SOURCE_FILES mainTrue.cpp auxFunction.h avlStruct.h
+        Course.h HoursAndCounters.h Lecture.h library.cpp
+        HoursAndTrees.cpp HoursAndTrees.h library.h scheduleMatrix.h scheduleMatrix.cpp system.h)
+add_executable(pp2 ${SOURCE_FILES})

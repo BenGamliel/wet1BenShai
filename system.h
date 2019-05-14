@@ -91,7 +91,7 @@ StatusType System::addLecture(int hour,int room,int courseId){
         return FAILURE;
     }
     Lecture *lecture = new Lecture(room,hour);
-    Matrix->insertLectureToMatrix(lecturePoitner(lecture),hour,room);
+    Matrix->insertLectureToMatrix(lecture,hour,room);
     AVLNode<Course *,int> *node = Courses->findBYKey(courseId); /* O(log(n)) */
     if(node == NULL){
         Course *c = new Course(courseId);

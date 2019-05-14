@@ -22,7 +22,7 @@ class HoursAndTrees {
 private:
      int _numOfHours;
      int _numOfClass;
-    AVLTree<int,int>** _hourTreesClasses;
+    AVLTree<int,int,compareInt>** _hourTreesClasses;
 public:
     //constractor build new array -every node of the array holds a full avl tree
     //with the number of possible class to fill with a course (means the avl tree holds all avilable class and every
@@ -30,7 +30,7 @@ public:
     //each hour(int) in the tree means this hour is avilable to be used
     HoursAndTrees( int numOfHours,  int numOfClass):_numOfHours(numOfHours),_numOfClass(numOfClass){
         try {
-            _hourTreesClasses = new AVLTree<int,int>*[numOfHours];
+            _hourTreesClasses = new AVLTree<int,int,compareInt>*[numOfHours];
         }
         catch(std::bad_alloc&) {
             printf("bad alloc in HoursAndTrees constractor for col(hours) allocation\n");
@@ -43,7 +43,7 @@ public:
 
         try {
             for (int j = 0; j < numOfClass; j++) {
-                _hourTreesClasses[j] = new AVLTree<int,int,compareInt>(classValueArray,classValueArray,numOfClass);
+                _hourTreesClasses[j] = new AVLTree<int,int,compareInt>(classValueArray,&classValueArray,numOfClass);
                 init_counter++;
             }
         }

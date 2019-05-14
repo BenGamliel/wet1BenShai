@@ -6,94 +6,96 @@
 #define DSWET1SHAY_SCHEDULEMATRIX_H
 
 #include "Lecture.h"
+#include "Course.h"
 
 
 //int course_number;
 //int room;
 //int hour;
 //Course *c;
-
-class lecturePoitner {
-    Lecture* _data;
-public:
-//    friend class Lecture;
-    /*
-     * default constracot for lecturePointer used when init the scheduale matrix
-     */
-    explicit lecturePoitner(){
-        _data= nullptr;
-    }
-    /*
-     * lecturePointer constractor with a given lecture
-     * used to insert real lecture into the scheduleMatrix
-     */
-    explicit lecturePoitner(Lecture* lecture){
-        _data=lecture;//verify later when given lucture if points proparly
-    }
-    ~lecturePoitner()= default;
-    
-    void changeLecture(Lecture* newLecture){
-        if(!newLecture){
-            _data=nullptr;
-            return;
-        }
-        _data=newLecture;
-    }
-    Lecture* getLecture(){
-        return this->_data;
-    }
-    int getLectureCourseNumber(){//TODO shai needs to implament relavent func
-        if(!_data){
-            return -1;
-        }
-        return _data->getCourse()->getId();
-    }
-    int getLectureCourseHour(){
-        if(!_data){
-            return -1;
-        }
-        return _data->getHour();
-     }
-     int getLectureCourseRoom(){
-         if(!_data){
-             return -1;
-         }
-        return _data->getRoom();
-     }
-     
-};
+//
+//class Lecture {
+//    Lecture* _data;
+//public:
+////    friend class Lecture;
+//    /*
+//     * default constracot for Lecture used when init the scheduale matrix
+//     */
+//    explicit Lecture(){
+//        _data= nullptr;
+//    }
+//    /*
+//     * Lecture constractor with a given lecture
+//     * used to insert real lecture into the scheduleMatrix
+//     */
+//    explicit Lecture(Lecture* lecture){
+//        _data=lecture;//verify later when given lucture if points proparly
+//    }
+//    ~Lecture()= default;
+//
+//    void changeLecture(Lecture* newLecture){
+//        if(!newLecture){
+//            _data=nullptr;
+//            return;
+//        }
+//        _data=newLecture;
+//    }
+//    Lecture* getLecture(){
+//        return this->_data;
+//    }
+//    int getLectureCourseNumber(){//TODO shai needs to implament relavent func
+//        if(!_data){
+//            return -1;
+//        }
+//        Course *c = _data->getCourse();
+//        return c->getId();
+//    }
+//    int getLectureCourseHour(){
+//        if(!_data){
+//            return -1;
+//        }
+//        return _data->getHour();
+//     }
+//     int getLectureCourseRoom(){
+//         if(!_data){
+//             return -1;
+//         }
+//        return _data->getRoom();
+//     }
+//
+//};
 
 class scheduleMatrix {
- int _hours;
- int _rooms;
-lecturePoitner** _schedule;
+ int hours_;
+ int rooms_;
+Lecture*** schedule_;
 public:
 
-    scheduleMatrix( int hours,  int rooms):_hours(hours),_rooms(rooms),_schedule(nullptr){
+    scheduleMatrix( int hours,  int rooms):hours_(hours),rooms_(rooms),schedule_(nullptr){
         try {
-            _schedule = new lecturePoitner* [hours];
+            schedule_ = new Lecture** [hours];
         }
         catch(std::bad_alloc&){
-            delete _schedule;//maybe not needed here (delete)
+            delete schedule_;//maybe not needed here (delete)
         }
         int init_row_counter=0;
         try{
-    for (int i=0;i<_rooms;i++){
-        _schedule[i]=new lecturePoitner[rooms];
+    for (int i=0;i<rooms_;i++){
+        schedule_[i]=new Lecture*[rooms];
         init_row_counter++;
         }
     }
         catch(std::bad_alloc&){
             for (int j=0;j<init_row_counter;j++){
-                delete []_schedule[j];//to be tested!
+                delete []schedule_[j];//to be tested!
             }
-            delete [] _schedule;
+            delete [] schedule_;
         }
     }
     ~scheduleMatrix(){
         try {
-            for (int i = 0; i < _hours; i++) {
-                delete[] _schedule[i];
+            for (int i = 0; i < hours_; i++) {
+                delete[] schedule_[i];
             }
         }
             catch(std::bad_alloc&){
@@ -104,17 +106,17 @@ public:
     * param hour and roomID const lecature ref if param <0 or lecture adress is null (invalid input) return
     * else init a new lecaturePointer with the given param
     */
-   void insertLectureToMatrix(lecturePoitner lecature,int hour,int roomId){
-        if((!lecature.getLecture())||(hour<0)||(roomId<0)){
+   void insertLectureToMatrix(Lecture *lecature,int hour,int roomId){
+        if((!lecature)||(hour<0)||(roomId<0)){
             return;
         }
-        _schedule[hour][roomId].changeLecture(lecature.getLecture());
+        schedule_[hour][roomId]= lecature;
     }
     void removeLectureFromMatrix(int hour,int roomId){
         if((hour<0)||(roomId<0)){
             return;
         }
-        _schedule[hour][roomId].changeLecture(nullptr);
+        schedule_[hour][roomId] = nullptr;
        
    }
     /*
@@ -125,14 +127,14 @@ public:
         if((hour<0)||(roomId<0)) {
             return nullptr;
         }
-        return _schedule[hour][roomId].getLecture();
+        return schedule_[hour][roomId];
     }
-    void getCourseId(int hour,int roomId,int* courseId){
-        if((roomId<0)||(hour<0)||(!courseId)){
-            return;
-        }
-        *courseId=_schedule[hour][roomId].getLecture()->getCourseNumber();
-    }
+//    void getCourseId(int hour,int roomId,int* courseId){
+//        if((roomId<0)||(hour<0)||(!courseId)){
+//            return;
+//        }
+//        schedule_[hour][roomId]->getCourse()->getNum()
+//    }
 };
 
 
