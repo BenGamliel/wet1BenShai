@@ -8,3 +8,6 @@ AVLNode<T, K> *AVLTree<T, K, Compare>::sortedArrayToAvl(T *values, int x, int y)
     root->setRightSon(sortedArrayToAvl(values,  mid + 1, y));
     return root;
 }
+AVLTree(T *keys,int size){
+        this->root = sortedArrayToAvl(keys,0,size-1);
+    }
