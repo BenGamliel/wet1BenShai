@@ -1,0 +1,23 @@
+template <class T,class K,class Compare>
+void AVLTree<T,K,Compare>::deleteBYKey(const K &key)  {
+    AVLNode<T,K>* current = findBYKey(key);
+    //while (Compare()(key, current->getKey()) || Compare()(current->getKey(), key)) {
+      //  current = Compare()(key, current->getKey()) ? current->getLeft() : current->getRight();
+    //}
+	
+	
+    //AVLNode<T,K>* parent = current->getParent();
+    if (!current->getLeft() && !current->getRight()) {
+        removeLeaf(current);
+    } else if (!current->getRight() || !current->getLeft()) {
+        removeSingleN(current);
+    } else {
+        removeDoubleN(current);
+    }
+
+    //Lets balance the tree
+    update(parent);
+    roll(parent);
+    updateroot();
+    this->size--;
+}
