@@ -70,11 +70,11 @@ public:
 
 
     void scheduleAClass(int hour, int theClass){
-        _hourTreesClasses[theClass]->deleteBYKey(hour);
+        _hourTreesClasses[hour]->deleteBYKey(theClass);
 
     }
     void freeAClass(int hour, int theClass) {
-        _hourTreesClasses[theClass]->insert(hour,hour);
+        _hourTreesClasses[hour]->insert(theClass,theClass);
 
     }
     //getAllFreeRoomsByHour will return a malloc array contains all the room avilable in given hour

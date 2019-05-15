@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.14)
 project(Wet1)
 
 set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_FLAGS "-std=c++0x -DNDBUG -Wall")
+set(CMAKE_CXX_FLAGS "-std=c++11 -DNDEBUG -Wall")
 
 add_executable(Wet1 main.cpp
         Course.h Lecture.h

@@ -12,9 +12,9 @@ bool HoursAndCountersTest();
 class HoursAndCounters {
     int _hours;
     int _rooms;
-     int* _hoursCounters;
-     int _totalSum;
-    int numberOfRooms;
+    int* _hoursCounters;
+    double _totalSum;
+    double numberOfRooms;
 
 public:
     //HoursAndCounter Counstractor input: a given value to init the array
@@ -39,14 +39,17 @@ public:
     void removeLuctureInHour(int hour){
         _hoursCounters[hour]--;
         if(_hoursCounters[hour]==0){
-            _totalSum--;
+            if(_hoursCounters[hour]==0){
+                return;
+            }
+            _hoursCounters[hour]--;
         }
     }
     unsigned int getTotalSum(){
         return _totalSum;
     }
     void getEfiiciency(float* efficiency){
-        *efficiency=(_totalSum/numberOfRooms);
+        *efficiency=(float)(_totalSum/numberOfRooms);
     }
 };
 

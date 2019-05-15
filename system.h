@@ -98,6 +98,9 @@ StatusType System::addLecture(int hour,int room,int courseId){
         Courses->insert(c,courseId); /* O(log(n)) */
         lecture->setCourse(c);
         c->addLectureToCourse(lecture);   /* O(log(m))  */
+        Matrix->insertLectureToMatrix(lecture,hour,room);
+//        HourTree->scheduleAClass(hour,room);//TODO verify this part program fail here (i think its the key value (0) )
+        HourCount->addLectureInHour(hour);
         return SUCCESS;
     }
     lecture->setCourse(node->getData());
